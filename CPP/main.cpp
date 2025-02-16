@@ -8,28 +8,26 @@ melakukan kecurangan seperti yang telah dispesifikasikan. Aamiin. */
 using namespace std;
 
 int main(){
-    int n;  // variabel untuk menyimpan jumlah produk
-    
+    int n;  // variabel untuk menyimpan jumlah produk    
     // variabel temporary untuk menyimpan data produk:
     int id_tmp;
     string nama_tmp, kat_tmp;
     double harga_tmp;
-    
     list<PetShop> produk; // deklarasi list produk
+    
+    // menambahkan data produk
     cout << "-->> Menambahkan Data produk: " << endl;
     cout << "-->> Berapa produk yang akan ditambahkan? " << endl;
     cin >> n; // masukkan jumlah produk yang akan diinput
-
     for(int i = 0; i < n; i++){
         cout << "-->> Masukkan data produk ke-" << i+1 << " (nama, kategori, harga)" << endl;
-        cin >> nama_tmp >> kat_tmp >> harga_tmp; // input data produk
-        
+        cin >> nama_tmp >> kat_tmp >> harga_tmp; // input data produk        
         PetShop p(i+1, nama_tmp, kat_tmp, harga_tmp); // buat objek produk baru
         produk.push_back(p); // tambahkan produk ke list
 
     }
 
-    // tampilkan data produk
+    // menampilkan data produk
     cout << endl;
     cout << "-->> Menampilkan Data produk: " << endl;
     for(auto it = produk.begin(); it != produk.end(); it++){
@@ -57,7 +55,6 @@ int main(){
     for(auto it = produk.begin(); it != produk.end(); it++){
         it->printPetShop(); // tampilkan data produk
     }
-
 
     // menghapus data produk
     cout << endl;
