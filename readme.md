@@ -20,6 +20,7 @@ Program dapat menambahkan, menampilkan, mengubah, menghapus dan mencari produk.
 (Semua menu ada di halaman utama)
 
 Tampilan halaman utama:
+
 ![](imagephphome.png)
 
 Menambahkan produk:
