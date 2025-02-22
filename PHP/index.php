@@ -59,7 +59,7 @@ $filteredProduk = array_filter($_SESSION['produk'], function ($p) use ($search) 
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(to bottom, #2A0038, #7A0A6E);
             text-align: center;
-            color: #E1E1E6;
+            color:rgb(255, 255, 255);
             margin: 0;
             padding: 0;
         }
@@ -85,7 +85,7 @@ $filteredProduk = array_filter($_SESSION['produk'], function ($p) use ($search) 
         th, td {
             padding: 12px;
             border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-            color: #E1E1E6;
+            color:rgb(255, 255, 255);
         }
 
         th {
@@ -127,7 +127,7 @@ $filteredProduk = array_filter($_SESSION['produk'], function ($p) use ($search) 
 
         input {
             background: rgba(255, 255, 255, 0.3);
-            color: #E1E1E6;
+            color:rgb(255, 255, 255);
             border-bottom: 2px solid #FF00FF;
         }
 
