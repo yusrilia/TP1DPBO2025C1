@@ -31,8 +31,10 @@ Mengubah produk:
 ![](imagephpedit.png)
 
 Menghapus produk:
+
 ![](imagephpdel.png)
 
 Mencari produk:
+
 ![](imagephpcari1.png)
 ![](imagephpcari2.png)
