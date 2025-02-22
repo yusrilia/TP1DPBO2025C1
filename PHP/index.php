@@ -1,18 +1,18 @@
 <?php
+session_start();
 
-// session_start();
+// jika ada konflik session, hapus session lama:
 // session_destroy(); // Hapus session lama
 // session_start();   // Mulai session baru
 // $_SESSION['produk'] = []; // Reset daftar produk
 
-session_start();
 
-// Inisialisasi daftar produk jika belum ada
+// inisialisasi daftar produk jika belum ada
 if (!isset($_SESSION['produk'])) {
     $_SESSION['produk'] = [];
 }
 
-// Tambah Produk
+// tambah Produk
 if (isset($_POST['add'])) {
     $id = count($_SESSION['produk']) + 1;
     $nama = $_POST['nama'];
@@ -29,7 +29,7 @@ if (isset($_POST['add'])) {
     ];
 }
 
-// Hapus Produk
+// hapus Produk
 if (isset($_POST['delete'])) {
     $deleteId = $_POST['delete_id'];
     foreach ($_SESSION['produk'] as $key => $p) {
@@ -41,7 +41,7 @@ if (isset($_POST['delete'])) {
     }
 }
 
-// Cari Produk
+// cari Produk
 $search = isset($_POST['search']) ? strtolower($_POST['search']) : '';
 $filteredProduk = array_filter($_SESSION['produk'], function ($p) use ($search) {
     return strpos(strtolower($p['nama']), $search) !== false || strpos(strtolower($p['kategori']), $search) !== false;
@@ -171,44 +171,46 @@ $filteredProduk = array_filter($_SESSION['produk'], function ($p) use ($search) 
     </style>
 </head>
 <body>
+    <!-- menampilkan data pet shop -->
 
-    <h2>🐾 PetShop - Manajemen Produk</h2>
+    <h2>🐾 PetShop 🐾</h2>
 
-    <!-- Form Tambah Produk -->
+    <!-- form add produk -->
     <form method="POST">
-        <h3>Tambah Produk 🛍️</h3>
-        <input type="text" name="nama" placeholder="Nama Produk" required>
-        <input type="text" name="kategori" placeholder="Kategori" required>
-        <input type="number" name="harga" placeholder="Harga (Rp)" required>
-        <input type="text" name="photo" placeholder="URL Foto" required>
-        <button type="submit" name="add">➕ Tambah Produk</button>
+        <h3>tambah produk 🛍️</h3>
+        <input type="text" name="nama" placeholder="nama" required>
+        <input type="text" name="kategori" placeholder="kategori" required>
+        <input type="number" name="harga" placeholder="harga" required>
+        <input type="text" name="photo" placeholder="url foto" required>
+        <button type="submit" name="add">➕ tambah!!</button>
     </form>
 
-    <!-- Search Bar -->
+    <!-- cari produk -->
     <form method="POST" class="search-container">
         <input type="text" name="search" placeholder="Cari produk..." value="<?= htmlspecialchars($search) ?>">
-        <button type="submit">🔍 Cari</button>
+        <button type="submit">🔍 cari</button>
     </form>
 
-    <!-- Daftar Produk -->
+    <!-- daftar produk -->
     <table>
         <tr>
-            <th>ID</th>
-            <th>Nama</th>
-            <th>Kategori</th>
-            <th>Harga</th>
-            <th>Foto</th>
-            <th>Aksi</th>
+            <th>id</th>
+            <th>nama</th>
+            <th>kategori</th>
+            <th>harga</th>
+            <th>foto</th>
+            <th>aksi</th>
         </tr>
+        <!-- tampilkan smua data produk pakai perulangan foreach-->
         <?php foreach ($filteredProduk as $p) : ?>
         <tr>
             <td><?= $p['id'] ?></td>
             <td><?= $p['nama'] ?></td>
             <td><?= $p['kategori'] ?></td>
             <td>Rp<?= number_format($p['harga'], 0, ',', '.') ?></td>
-            <td><img src="<?= $p['photo'] ?>" alt="Foto Produk"></td>
+            <td><img src="<?= $p['photo'] ?>" alt="foto produk"></td>
             <td>
-                <form method="POST" onsubmit="return confirm('Yakin ingin menghapus produk ini?');">
+                <form method="POST" onsubmit="return confirm('beneran mw dihapus nih?');">
                     <input type="hidden" name="delete_id" value="<?= $p['id'] ?>">
                     <button type="submit" name="delete">🗑️ Hapus</button>
                 </form>

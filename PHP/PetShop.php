@@ -1,14 +1,16 @@
 <?php
-session_start(); // Mulai sesi
+session_start(); // mulai sesi
 
-// Inisialisasi session produk jika belum ada
+// inisialisasi session produk jika belum ada
 if (!isset($_SESSION['produk'])) {
     $_SESSION['produk'] = [];
 }
 
 class PetShop {
+    // variabel atribut yang akan digunakan
     public $id, $nama, $kategori, $harga, $photo;
 
+    // konstruktor untuk inisialisasi nilai awal
     public function __construct($id, $nama, $kategori, $harga, $photo) {
         $this->id = $id;
         $this->nama = $nama;
@@ -17,6 +19,7 @@ class PetShop {
         $this->photo = $photo;
     }
 
+    // method untuk menampilkan data produk
     public function printPetShop() {
         echo "<tr>
                 <td>{$this->id}</td>
@@ -28,15 +31,17 @@ class PetShop {
     }
 }
 
-// Jika ada input dari form, tambahkan ke session
+// jika ada input dari form, tambahkan ke session
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // ambil data dari form
     $nama = $_POST['nama'] ?? '';
-    $kategori = $_POST['kategori'] ?? '';
     $harga = $_POST['harga'] ?? 0;
-    $photo = $_POST['photo'] ?? 'https://via.placeholder.com/80';
+    $photo = $_POST['photo'] ?? '';
+    $kategori = $_POST['kategori'] ?? '';
 
-    $id = count($_SESSION['produk']) + 1;
-    $newProduct = new PetShop($id, $nama, $kategori, $harga, $photo);
-    $_SESSION['produk'][] = $newProduct;
+    // tambahkan produk baru ke session
+    $id = count($_SESSION['produk']) + 1; // id = jumlah produk + 1
+    $newProduct = new PetShop($id, $nama, $kategori, $harga, $photo); // buat objek produk
+    $_SESSION['produk'][] = $newProduct; // tambahkan produk ke session
 }
 ?>
