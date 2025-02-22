@@ -17,14 +17,22 @@ Program dapat menambahkan, menampilkan, mengubah, menghapus dan mencari produk.
 ![output py](imagepy.png)
 
 ### Output program PHP:
+(Semua menu ada di halaman utama)
 
 Tampilan halaman utama:
 ![](imagephphome.png)
 
 Menambahkan produk:
 
+![](imagephpadd.png)
+
 Mengubah produk:
 
+![](imagephpedit.png)
+
 Menghapus produk:
+![](imagephpdel.png)
 
 Mencari produk:
+![](imagephpcari1.png)
+![](imagephpcari2.png)

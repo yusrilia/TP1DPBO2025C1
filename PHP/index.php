@@ -1,24 +1,18 @@
 <?php
 session_start();
 
-// jika ada konflik session, hapus session lama:
-// session_destroy(); // Hapus session lama
-// session_start();   // Mulai session baru
-// $_SESSION['produk'] = []; // Reset daftar produk
-
-
-// inisialisasi daftar produk jika belum ada
+// Inisialisasi daftar produk jika belum ada
 if (!isset($_SESSION['produk'])) {
     $_SESSION['produk'] = [];
 }
 
-// tambah Produk
+// Tambah Produk
 if (isset($_POST['add'])) {
     $id = count($_SESSION['produk']) + 1;
     $nama = $_POST['nama'];
     $kategori = $_POST['kategori'];
     $harga = $_POST['harga'];
-    $photo = $_POST['photo']; // URL foto produk
+    $photo = $_POST['photo'];
 
     $_SESSION['produk'][] = [
         'id' => $id,
@@ -29,19 +23,33 @@ if (isset($_POST['add'])) {
     ];
 }
 
-// hapus Produk
+// Hapus Produk
 if (isset($_POST['delete'])) {
     $deleteId = $_POST['delete_id'];
     foreach ($_SESSION['produk'] as $key => $p) {
         if ($p['id'] == $deleteId) {
             unset($_SESSION['produk'][$key]);
-            $_SESSION['produk'] = array_values($_SESSION['produk']); // Re-index array
+            $_SESSION['produk'] = array_values($_SESSION['produk']);
             break;
         }
     }
 }
 
-// cari Produk
+// Ubah Produk
+if (isset($_POST['update'])) {
+    $updateId = $_POST['update_id'];
+    foreach ($_SESSION['produk'] as &$p) {
+        if ($p['id'] == $updateId) {
+            $p['nama'] = $_POST['nama'];
+            $p['kategori'] = $_POST['kategori'];
+            $p['harga'] = $_POST['harga'];
+            $p['photo'] = $_POST['photo'];
+            break;
+        }
+    }
+}
+
+// Cari Produk
 $search = isset($_POST['search']) ? strtolower($_POST['search']) : '';
 $filteredProduk = array_filter($_SESSION['produk'], function ($p) use ($search) {
     return strpos(strtolower($p['nama']), $search) !== false || strpos(strtolower($p['kategori']), $search) !== false;
@@ -54,6 +62,9 @@ $filteredProduk = array_filter($_SESSION['produk'], function ($p) use ($search) 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PetShop 🐾</title>
+</head>
+<body>
+    <h2>🐾 PetShop Products </h2>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -67,8 +78,8 @@ $filteredProduk = array_filter($_SESSION['produk'], function ($p) use ($search) 
         h2 {
             font-size: 28px;
             font-weight: 600;
-            color: #FF00FF;
-            text-shadow: 0px 0px 12px rgba(255, 0, 255, 0.8);
+            color:rgb(255, 0, 140);
+            text-shadow: 0px 0px 12px rgba(255, 0, 140, 0.8);
         }
 
         table {
@@ -169,55 +180,74 @@ $filteredProduk = array_filter($_SESSION['produk'], function ($p) use ($search) 
             border-left: none;
         }
     </style>
-</head>
-<body>
-    <!-- menampilkan data pet shop -->
 
-    <h2>🐾 PetShop 🐾</h2>
-
-    <!-- form add produk -->
+    <!-- Form Cari Produk -->
     <form method="POST">
-        <h3>tambah produk 🛍️</h3>
-        <input type="text" name="nama" placeholder="nama" required>
-        <input type="text" name="kategori" placeholder="kategori" required>
-        <input type="number" name="harga" placeholder="harga" required>
-        <input type="text" name="photo" placeholder="url foto" required>
-        <button type="submit" name="add">➕ tambah!!</button>
-    </form>
-
-    <!-- cari produk -->
-    <form method="POST" class="search-container">
         <input type="text" name="search" placeholder="Cari produk..." value="<?= htmlspecialchars($search) ?>">
-        <button type="submit">🔍 cari</button>
+        <button type="submit">🔍 Cari</button>
     </form>
 
-    <!-- daftar produk -->
-    <table>
+    <!-- Form Tambah Produk -->
+    <form method="POST">
+        <h3>Tambah Produk 🛍️</h3>
+        <input type="text" name="nama" placeholder="Nama" required>
+        <input type="text" name="kategori" placeholder="Kategori" required>
+        <input type="number" name="harga" placeholder="Harga" required>
+        <input type="text" name="photo" placeholder="URL Foto" required>
+        <button type="submit" name="add">➕ Tambah</button>
+    </form>
+
+    <!-- Daftar Produk -->
+    <table border="1" width="80%" align="center">
         <tr>
-            <th>id</th>
-            <th>nama</th>
-            <th>kategori</th>
-            <th>harga</th>
-            <th>foto</th>
-            <th>aksi</th>
+            <th>ID</th>
+            <th>Nama</th>
+            <th>Kategori</th>
+            <th>Harga</th>
+            <th>Foto</th>
+            <th>Aksi</th>
         </tr>
-        <!-- tampilkan smua data produk pakai perulangan foreach-->
         <?php foreach ($filteredProduk as $p) : ?>
         <tr>
             <td><?= $p['id'] ?></td>
             <td><?= $p['nama'] ?></td>
             <td><?= $p['kategori'] ?></td>
             <td>Rp<?= number_format($p['harga'], 0, ',', '.') ?></td>
-            <td><img src="<?= $p['photo'] ?>" alt="foto produk"></td>
+            <td><img src="<?= $p['photo'] ?>" width="80"></td>
             <td>
-                <form method="POST" onsubmit="return confirm('beneran mw dihapus nih?');">
+                <form method="POST" style="display:inline;">
                     <input type="hidden" name="delete_id" value="<?= $p['id'] ?>">
                     <button type="submit" name="delete">🗑️ Hapus</button>
                 </form>
+                <button onclick="editProduk(<?= $p['id'] ?>, '<?= $p['nama'] ?>', '<?= $p['kategori'] ?>', <?= $p['harga'] ?>, '<?= $p['photo'] ?>')">✏️ Ubah</button>
             </td>
         </tr>
         <?php endforeach; ?>
     </table>
 
+    <!-- Form Ubah Produk -->
+    <div id="editForm" style="display:none;">
+        <h3>Ubah Produk ✏️</h3>
+        <form method="POST">
+            <input type="hidden" id="update_id" name="update_id">
+            <input type="text" id="update_nama" name="nama" required>
+            <input type="text" id="update_kategori" name="kategori" required>
+            <input type="number" id="update_harga" name="harga" required>
+            <input type="text" id="update_photo" name="photo" required>
+            <button type="submit" name="update">✔️ Simpan</button>
+            <button type="button" onclick="document.getElementById('editForm').style.display='none'">❌ Batal</button>
+        </form>
+    </div>
+
+    <script>
+        function editProduk(id, nama, kategori, harga, photo) {
+            document.getElementById('update_id').value = id;
+            document.getElementById('update_nama').value = nama;
+            document.getElementById('update_kategori').value = kategori;
+            document.getElementById('update_harga').value = harga;
+            document.getElementById('update_photo').value = photo;
+            document.getElementById('editForm').style.display = 'block';
+        }
+    </script>
 </body>
 </html>
